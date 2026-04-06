@@ -1,36 +1,35 @@
-package com.example;
-
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-
 public class AppTest {
-
-    App calculator = new App();
-
-    @Test
-    void testAdd() {
-        assertEquals(15, calculator.add(10, 5));
+    public static void main(String[] args) {
+        testAttendanceCalculation();
+        testEligibilityLogic();
+        System.out.println("All tests passed!");
     }
 
-    @Test
-    void testSubtract() {
-        assertEquals(5, calculator.subtract(10, 5));
+    public static void testAttendanceCalculation() {
+        Student s = new Student("Test User");
+        s.markAttendance(true);
+        s.markAttendance(false);
+        
+        // Expected: 1/2 = 50%
+        assert s.getPercentage() == 50.0 : "Math Error: Percentage calculation failed.";
+        System.out.println("Test 1: Attendance Calculation [PASSED]");
     }
 
-    @Test
-    void testMultiply() {
-        assertEquals(50, calculator.multiply(10, 5));
-    }
-
-    @Test
-    void testDivide() {
-        assertEquals(2, calculator.divide(10, 5));
-    }
-
-    @Test
-    void testDivideByZero() {
-        assertThrows(ArithmeticException.class, () -> {
-            calculator.divide(10, 0);
-        });
+    public static void testEligibilityLogic() {
+        Student s = new Student("Candidate");
+        
+        // Mark 4 classes: 3 Present, 1 Absent (75%)
+        s.markAttendance(true);
+        s.markAttendance(true);
+        s.markAttendance(true);
+        s.markAttendance(false);
+        
+        assert s.getStatus().equals("Eligible") : "Status Error: 75% should be Eligible.";
+        
+        // Mark 1 more Absent: 3/5 (60%)
+        s.markAttendance(false);
+        assert s.getStatus().contains("WARNING") : "Status Error: <75% should trigger Warning.";
+        
+        System.out.println("Test 2: Eligibility & Warning Logic [PASSED]");
     }
 }
