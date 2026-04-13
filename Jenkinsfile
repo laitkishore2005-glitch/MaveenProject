@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     tools {
-        // Updated names to match your Jenkins configuration
         maven 'Maven' 
         jdk 'JDK25'
     }
@@ -17,14 +16,15 @@ pipeline {
         stage('Compile') {
             steps {
                 echo 'Compiling the Voting Eligibility System...'
-                sh 'mvn clean compile'
+                // Changed 'sh' to 'bat' for Windows
+                bat 'mvn clean compile'
             }
         }
 
         stage('Run Tests') {
             steps {
                 echo 'Running JUnit Eligibility Tests...'
-                sh 'mvn test'
+                bat 'mvn test'
             }
             post {
                 always {
@@ -36,7 +36,7 @@ pipeline {
         stage('Package') {
             steps {
                 echo 'Packaging the application into a JAR file...'
-                sh 'mvn package -DskipTests'
+                bat 'mvn package -DskipTests'
             }
         }
     }
@@ -46,7 +46,7 @@ pipeline {
             echo 'Voting System Pipeline Build Successful!'
         }
         failure {
-            echo 'Build Failed. Please check the test results for ineligibility logic errors.'
+            echo 'Build Failed. Please check the logs.'
         }
     }
 }
