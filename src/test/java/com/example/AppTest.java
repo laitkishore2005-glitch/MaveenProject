@@ -1,35 +1,42 @@
+package com.voting;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
 public class AppTest {
-    public static void main(String[] args) {
-        testAttendanceCalculation();
-        testEligibilityLogic();
-        System.out.println("All tests passed!");
+
+    @Test
+    public void testEligibleVoter() {
+        Voter voter = new Voter("Rahul", 20, "Indian", true, true);
+        assertEquals("Eligible to vote.", voter.checkEligibility());
     }
 
-    public static void testAttendanceCalculation() {
-        Student s = new Student("Test User");
-        s.markAttendance(true);
-        s.markAttendance(false);
-        
-        // Expected: 1/2 = 50%
-        assert s.getPercentage() == 50.0 : "Math Error: Percentage calculation failed.";
-        System.out.println("Test 1: Attendance Calculation [PASSED]");
+    @Test
+    public void testUnderageVoter() {
+        Voter voter = new Voter("Priya", 17, "Indian", true, true);
+        String result = voter.checkEligibility();
+        assertTrue(result.contains("Ineligible") && result.contains("Underage"));
     }
 
-    public static void testEligibilityLogic() {
-        Student s = new Student("Candidate");
-        
-        // Mark 4 classes: 3 Present, 1 Absent (75%)
-        s.markAttendance(true);
-        s.markAttendance(true);
-        s.markAttendance(true);
-        s.markAttendance(false);
-        
-        assert s.getStatus().equals("Eligible") : "Status Error: 75% should be Eligible.";
-        
-        // Mark 1 more Absent: 3/5 (60%)
-        s.markAttendance(false);
-        assert s.getStatus().contains("WARNING") : "Status Error: <75% should trigger Warning.";
-        
-        System.out.println("Test 2: Eligibility & Warning Logic [PASSED]");
+    @Test
+    public void testNonCitizen() {
+        Voter voter = new Voter("Mike", 25, "German", true, true);
+        String result = voter.checkEligibility();
+        assertTrue(result.contains("Ineligible") && result.contains("Non-citizen"));
+    }
+
+    @Test
+    public void testInvalidId() {
+        Voter voter = new Voter("Ali", 30, "Indian", true, false);
+        String result = voter.checkEligibility();
+        assertTrue(result.contains("Ineligible") && result.contains("Invalid ID"));
+    }
+
+    @Test
+    public void testMultipleFailures() {
+        // Underage AND No ID
+        Voter voter = new Voter("Kid", 12, "Indian", false, false);
+        String result = voter.checkEligibility();
+        assertTrue(result.contains("Underage") && result.contains("No Voter ID"));
     }
 }
