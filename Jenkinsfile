@@ -2,16 +2,14 @@ pipeline {
     agent any
 
     tools {
-        // Ensure 'Maven 3.9' and 'JDK 17' match the names you configured 
-        // in Jenkins under 'Manage Jenkins' -> 'Global Tool Configuration'
-        maven 'Maven 3.9' 
-        jdk 'JDK 17'
+        // Updated names to match your Jenkins configuration
+        maven 'Maven' 
+        jdk 'JDK25'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Clones your code from the Git repository defined in your Jenkins job
                 checkout scm
             }
         }
@@ -30,7 +28,6 @@ pipeline {
             }
             post {
                 always {
-                    // This archives the unit test results in the Jenkins UI
                     junit '**/target/surefire-reports/*.xml'
                 }
             }
